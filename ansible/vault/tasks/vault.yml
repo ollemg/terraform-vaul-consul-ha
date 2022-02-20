@@ -1,0 +1,43 @@
+---
+# tasks file for vault
+- name: Instala pacotes DNF
+  dnf:
+    state: latest
+    update_cache: true
+    name: 
+      - dnf-plugins-core
+      - vault
+      - ca-certificates
+  register: dnf_install
+
+- name: Configuração vault.hcl
+  template:
+    src: vault.hcl.j2
+    dest: /etc/vault.d/vault.hcl
+    owner: vault
+    group: vault
+    mode: '0644'
+
+- name: Configuração vault.hcl
+  template:
+    src: vault.env.j2
+    dest: /etc/vault.d/vault.env
+    owner: vault
+    group: vault
+    mode: '0644'
+
+- name: Copia o certificado SSL
+  copy:
+    src: "ssl/"
+    dest: /opt/vault/tls/
+    owner: vault
+    group: vault
+    mode: '0600'
+
+- name: Export variable
+  shell: source /etc/vault.d/vault.env
+
+- name: debug
+  debug:
+    msg: "{{dnf_install}}"
+  

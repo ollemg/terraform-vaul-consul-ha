@@ -1,0 +1,13 @@
+---
+- name: Configuração vault.hcl
+  template:
+    src: autounseal.hcl.j2
+    dest: /etc/vault.d/autounseal.hcl
+    owner: vault
+    group: vault
+    mode: '0644'
+
+- name: Vault secret transit
+  shell: |
+    vault secrets enable transit
+    vault write -f transit/keys/autounseal

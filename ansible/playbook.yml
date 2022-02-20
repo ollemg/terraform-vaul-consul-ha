@@ -1,0 +1,25 @@
+---
+- hosts: all
+  pre_tasks:
+    - name: Configura o hostname
+      hostname:
+        name: "{{ hostname_suffix }}"
+      register: hostname
+
+    - name: Visualiza o hostname
+      debug:
+        msg: "{{ hostname }}"
+
+    - name: Download repo hashcorp
+      get_url:
+        url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+        dest: /etc/yum.repos.d/hashcorp.repo
+        mode: '6440'
+
+#- hosts: vault
+#  roles:  
+#    - vault
+#
+#- hosts: consul
+#  roles:  
+#    - consul
