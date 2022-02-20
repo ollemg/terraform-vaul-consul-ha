@@ -145,6 +145,7 @@ celerybeat.pid
 .env
 .venv/
 ansible/.venv
+ansible/vault/files/ssl/*
 env/
 venv/
 ENV/
@@ -238,3 +239,6 @@ terraform.rc
 # Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,ansible,terraform,packer
+
+format-test.py
+hosts.py
