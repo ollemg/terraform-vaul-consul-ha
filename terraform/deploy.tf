@@ -10,10 +10,11 @@ resource "libvirt_volume" "rocky8" {
 
 # Define KVM domain to create
 resource "libvirt_domain" "libvirt_vm" {
+  # for_each = var.vm_name 
   count  = length(var.vm_name)
   name   = var.vm_name[count.index]
-  memory = "1024"
-  vcpu   = 1
+  memory = var.vm_memory
+  vcpu   = var.vm_vcpu
 
   network_interface {
     network_name   = "default" # List networks with virsh net-list
@@ -36,7 +37,15 @@ resource "libvirt_domain" "libvirt_vm" {
     listen_type = "address"
     autoport    = true
   }
+  provisioner "remote-exec" {
+    connection {
+      host        = self.network_interface.0.addresses.0
+      type        = "ssh"
+      user        = "${var.username}"
+      password    = "${var.password}"
+      timeout     = "1m"
+      # private_key = file(var.vm_ssh_private_key)
+    }
+    inline = [ "hostnamectl set-hostname ${var.vm_name[count.index]}"  ]
+  }
 }
-
-
-
