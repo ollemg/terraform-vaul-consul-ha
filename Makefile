@@ -23,13 +23,24 @@ ssl:		## Create SSL certificate in ./config_nc_web/files/ssl/
 deploy:		## Terraform deploy
 	# make -C packer
 	make -C terraform
-	@source .venv/bin/activate; \
-	./format-test.py
 	make -C ansible
 
 .PHONY: destroy
 destroy:		## Terraform destroy
-	make -C terraform tf-destroy
+	make -C terraform destroy
+
+.PHONY: output
+output:		## Terraform output
+	make -C terraform output
+
+.PHONY: playbook
+playbook:		## Terraform output
+	make -C ansible playbook
+
+.PHONY: clean
+clean:		## Terraform output
+	make -C ansible clean
+	make -C terraform clean
 
 format:
 	terraform fmt terraform/
