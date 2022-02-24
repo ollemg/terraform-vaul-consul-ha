@@ -1,5 +1,5 @@
 ---
-- name: Instala pacotes DNF
+- name: Instala consul via dnf
   dnf:
     state: latest
     update_cache: true
@@ -47,18 +47,13 @@
     group: consul
     mode: '0644'
 
-- name: Inicia o consul
+- name: Inicia/Reinicia o consul
   service:
     name: consul
     state: restarted
     enabled: true
-  # when: ansible_hostname | regex_search("consul")
 
 - name: consul members consult
   shell: |
     consul members
   register: consul_members
-
-- name: debug
-  debug:
-    msg: "{{ consul_members.stdout_lines }}"

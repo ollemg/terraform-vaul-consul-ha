@@ -1,6 +1,6 @@
 ---
 # tasks file for vault
-- name: Instala pacotes DNF
+- name: Instala vault via dnf
   dnf:
     state: latest
     update_cache: true
@@ -12,13 +12,19 @@
 
 - name: Configuração vault.hcl
   template:
-    src: vault.hcl.j2
-    dest: /etc/vault.d/vault.hcl
+    src: '{{ filename }}.j2'
+    dest: /etc/vault.d/{{ filename }}
     owner: vault
     group: vault
     mode: '0644'
+  loop:
+    - vault.hcl
+    - vault.env
+    - vault.sh
+  loop_control: 
+    loop_var: filename
 
-- name: Configuração vault.hcl
+- name: Configuração vault.env
   template:
     src: vault.env.j2
     dest: /etc/vault.d/vault.env
@@ -34,15 +40,14 @@
     group: vault
     mode: '0600'
 
-- name: Export variable
-  shell: source /etc/vault.d/vault.env
-
-- name: debug
-  debug:
-    msg: "{{ dnf_install }}"
-
-- name: Inicia o consul
+- name: Inicia/Reinicia o vault
   service:
     name: vault
     state: restarted
     enabled: true
+
+- name: Insere as váriaveis de ambiente
+  lineinfile:
+    path: /etc/profile
+    line: export VAULT_ADDR='http://{{ ansible_default_ipv4.address }}:8200'
+  

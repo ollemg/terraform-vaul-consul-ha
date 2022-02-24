@@ -1,20 +1,27 @@
 server = true
+bootstrap_expect = 3
+
 ui_config{
     enabled = true
 }
+
 addresses {  
     grpc = "127.0.0.1"
 }
+
 ports {  
     grpc  = 8502
 }
+
 connect {  
     enabled = true
     }
 # https://www.consul.io/docs/install/performance
+
 performance {  
     raft_multiplier = 1
     }
+
 auto_encrypt {
     allow_tls = true
 }

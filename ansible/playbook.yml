@@ -1,16 +1,4 @@
 ---
-# - hosts: local
-#   gather_facts: false
-#   tasks:
-#     - name: consul keygen
-#       shell: |
-#         /usr/bin/docker run --rm consul keygen
-#       register: consul_keygen
-    
-#     - name: visualiza consul keygen
-#       debug:
-#         msg: "{{ consul_keygen }}"
-
 - hosts: all
   vars_files:
     - hostname.yml
@@ -21,26 +9,23 @@
         dest: /etc/yum.repos.d/hashcorp.repo
         mode: '6440'
     
-    - name: Par de chaves SSH
-      openssh_keypair:
-        owner: '{{ username }}'
-        group: '{{ username }}'
-        path: /home/{{ username }}/.ssh/id_rsa
-        mode: '644'
-        type: rsa
-    
-    - name: ajusta permissão
-      file:
-        path: '{{ filename }}'
-        owner: '{{ username }}'
-        group: '{{ username }}'
-        mode: '644'
-      loop:
-        - /home/{{ username }}/.ssh/id_rsa
-        - /home/{{ username }}/.ssh/id_rsa.pub
-      loop_control: 
-        loop_var: filename
-    
   roles:  
     - consul
     - vault
+  
+  tasks:
+    - name: consul members
+      debug:
+        msg: "{{ consul_members.stdout_lines }}"
+    
+    - name: acessos consul
+      debug:
+        msg: 
+          - "http://{{ ansible_default_ipv4.address }}:8500"
+      when: ansible_hostname | regex_search("consul")
+    
+    - name: acessos vault
+      debug:
+        msg: 
+          - "http://{{ ansible_default_ipv4.address }}:8200"
+      when: ansible_hostname | regex_search("vault")

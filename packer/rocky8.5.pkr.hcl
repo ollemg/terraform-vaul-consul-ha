@@ -14,11 +14,6 @@ variable "cpu" {
   default = "6"
 }
 
-variable "destination_server" {
-  type    = string
-  default = "download.goffinet.org"
-}
-
 variable "disk_size" {
   type    = string
   default = "16384"
@@ -81,7 +76,7 @@ source "qemu" "rocky8_5" {
   iso_checksum     = "${var.iso_checksum}"
   iso_urls         = "${var.iso_urls}"
   net_device       = "virtio-net"
-  output_directory = "/home/ollemg/packer.d/"
+  output_directory = "output"
   qemuargs         = [["-m", "${var.ram}M"], ["-smp", "cpus=${var.cpu}"]]
   shutdown_command = "shutdown -P now"
   ssh_port         = 22
