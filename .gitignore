@@ -240,5 +240,6 @@ terraform.rc
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,ansible,terraform,packer
 
-format-test.py
 hosts.py
+hostname.yml
+ansible/consul/files/certs/*.pem
