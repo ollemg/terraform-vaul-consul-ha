@@ -1,25 +1,46 @@
 ---
+# - hosts: local
+#   gather_facts: false
+#   tasks:
+#     - name: consul keygen
+#       shell: |
+#         /usr/bin/docker run --rm consul keygen
+#       register: consul_keygen
+    
+#     - name: visualiza consul keygen
+#       debug:
+#         msg: "{{ consul_keygen }}"
+
 - hosts: all
+  vars_files:
+    - hostname.yml
   pre_tasks:
-    - name: Configura o hostname
-      hostname:
-        name: "{{ hostname_suffix }}"
-      register: hostname
-
-    - name: Visualiza o hostname
-      debug:
-        msg: "{{ hostname }}"
-
     - name: Download repo hashcorp
       get_url:
         url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
         dest: /etc/yum.repos.d/hashcorp.repo
         mode: '6440'
-
-#- hosts: vault
-#  roles:  
-#    - vault
-#
-#- hosts: consul
-#  roles:  
-#    - consul
+    
+    - name: Par de chaves SSH
+      openssh_keypair:
+        owner: '{{ username }}'
+        group: '{{ username }}'
+        path: /home/{{ username }}/.ssh/id_rsa
+        mode: '644'
+        type: rsa
+    
+    - name: ajusta permissão
+      file:
+        path: '{{ filename }}'
+        owner: '{{ username }}'
+        group: '{{ username }}'
+        mode: '644'
+      loop:
+        - /home/{{ username }}/.ssh/id_rsa
+        - /home/{{ username }}/.ssh/id_rsa.pub
+      loop_control: 
+        loop_var: filename
+    
+  roles:  
+    - consul
+    - vault

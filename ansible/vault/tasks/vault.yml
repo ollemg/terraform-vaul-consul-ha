@@ -39,5 +39,10 @@
 
 - name: debug
   debug:
-    msg: "{{dnf_install}}"
-  
+    msg: "{{ dnf_install }}"
+
+- name: Inicia o consul
+  service:
+    name: vault
+    state: restarted
+    enabled: true

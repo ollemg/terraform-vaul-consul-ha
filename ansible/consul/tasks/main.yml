@@ -1,2 +1,7 @@
 ---
 # tasks file for consul
+
+- name: Import task consul
+  import_tasks: consul.yml
+  # when: ansible_hostname in 'consul'
+

@@ -1,0 +1,64 @@
+---
+- name: Instala pacotes DNF
+  dnf:
+    state: latest
+    update_cache: true
+    name: 
+      - dnf-plugins-core
+      - consul
+      - ca-certificates
+  register: dnf_install
+
+- name: Configuração do servidor
+  template:
+    src: '{{ filename }}.j2'
+    dest: /etc/consul.d/{{ filename }}
+    owner: consul
+    group: consul
+    mode: '0644'
+  loop:
+    - server.hcl
+    - consul.hcl
+    - ssl.hcl
+  loop_control: 
+    loop_var: filename
+  when: ansible_hostname | regex_search("consul")
+
+- name: Configuração do cliente
+  template:
+    src: '{{ filename }}.j2'
+    dest: /etc/consul.d/{{ filename }}
+    owner: consul
+    group: consul
+    mode: '0644'
+  loop:
+    - ssl.hcl
+    - client.hcl
+    - consul.hcl
+  loop_control: 
+    loop_var: filename
+  when: ansible_hostname | regex_search("vault")
+
+- name: Copia os certificados 
+  copy:
+    src: "certs/"
+    dest: /opt/consul/
+    owner: consul
+    group: consul
+    mode: '0644'
+
+- name: Inicia o consul
+  service:
+    name: consul
+    state: restarted
+    enabled: true
+  # when: ansible_hostname | regex_search("consul")
+
+- name: consul members consult
+  shell: |
+    consul members
+  register: consul_members
+
+- name: debug
+  debug:
+    msg: "{{ consul_members.stdout_lines }}"

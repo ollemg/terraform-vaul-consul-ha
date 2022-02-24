@@ -1,4 +1,5 @@
 ---
 
 - name: import task
-  import_task: 
+  import_tasks: vault.yml
+  when: ansible_hostname | regex_search("vault")
