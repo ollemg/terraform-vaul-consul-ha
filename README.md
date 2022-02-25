@@ -36,7 +36,7 @@ root_password    = rockylinux
 Para rodar o projeto:
 
 ```
-make
+sudo make
 ```
 
 Depois que o comando make foi for executado, ainda é necessário acessar as máquinas do vault e rodar o comando de inicialização, rodar em apenas  uma vm:
@@ -164,3 +164,9 @@ vault03   192.168.100.99:8301  alive   client  1.11.3  2         dc01  default  
 Na console web do consul:
 
 ![consul_web](img/consul01.png)
+
+
+Para destruir o todas as maquinas virtuais e todos os recursos criados:
+```bash
+# sudo make destroy
+```
