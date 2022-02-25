@@ -41,3 +41,4 @@ clean:		## Limpa os arquivos que o terraform gera
 	@rm -rf ./tfplan
 	@rm -rf ./.terraform
 	@rm -rf ./.terraform.lock.hcl
+	@rm -rf ./.terraform.log

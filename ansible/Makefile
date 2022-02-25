@@ -46,6 +46,7 @@ certs:
 clean:
 	@rm -rf ./hostname.yml
 	@rm -rf ./hosts.py
+	@rm -rf ./hosts.ini
 	@rm -rf ./__pycache__
 	@rm -rf ./.venv
 	@rm -rf consul/files/certs/*
@@ -54,7 +55,7 @@ clean:
 .PHONY: ssl
 ssl:		## Create SSL certificate in vault/files/ssl/
 	@if [ ! -f vault/files/ssl/$(PROJECT_DOMAIN).crt ]; then \
-		openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $(PROJECT_DOMAIN).key -out $(PROJECT_DOMAIN).crt -subj "/C=/ST=/L=/O=/OU=/CN=" ;\
+		openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout vault/files/ssl/$(PROJECT_DOMAIN).key -out vault/files/ssl/$(PROJECT_DOMAIN).crt -subj "/C=/ST=/L=/O=/OU=/CN=" ;\
 	else \
 		echo "vault certificate exist"; \
 	fi
