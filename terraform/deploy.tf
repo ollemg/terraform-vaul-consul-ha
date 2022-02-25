@@ -5,7 +5,7 @@ resource "libvirt_volume" "rocky8" {
   name   = "${var.vm_name[count.index]}.qcow2"
   pool   = var.baseimagediskpoll # List storage pools using virsh pool-list
   source = "${var.sourcepathimage}/${var.sourceimage}"
-  format = "qcow2"
+  format = var.disk_format
 }
 
 # Define KVM domain to create
@@ -17,7 +17,7 @@ resource "libvirt_domain" "libvirt_vm" {
   vcpu   = var.vm_vcpu
 
   network_interface {
-    network_name   = "default" # List networks with virsh net-list
+    network_name   = var.networkname # List networks with virsh net-list
     wait_for_lease = true
     hostname       = var.vm_name[count.index]
   }

@@ -1,16 +1,18 @@
-variable "domainname" {
+variable "domain_name" {
   type        = string
   description = "Nome do dominio"
 }
 
 variable "baseimagediskpoll" {
   type        = string
-  description = "Local do disco"
+  description = "Local do disco (virsh pool-list)"
+  default     =  "default"
 }
 
 variable "networkname" {
   type        = string
-  description = "Rede"
+  description = "Rede do KVM (sudo virsh net-list)"
+  default     = "default"
 }
 
 variable "sourceimage" {
@@ -21,6 +23,7 @@ variable "sourceimage" {
 variable "sourcepathimage" {
   type        = string
   description = "Diretório da imagem do packer"
+  default     = "/var/lib/libvirt/pools/"
 }
 
 variable "vm_name" {
@@ -30,20 +33,32 @@ variable "vm_name" {
 
 variable "username" {
   type          = string
-  description   = "VM username"
+  description   = "Usuário administador da VM"
+  sensitive     = true
 }
 
 variable "password" {
   type          = string
-  description   = "VM username"
+  description   = "Senha do usuário administrador"
+  sensitive     = true
 }
 
 variable "vm_memory" {
   type          = string
-  description   = "VM memória"
+  description   = "Memória da VM"
 }
 
 variable "vm_vcpu" {
   type          = string
-  description   = "VM cpu"
+  description   = "vCPU da VM"
+}
+
+variable "libvirt_provider_uri" {
+  type          = string
+  default       = "qemu:///system"
+}
+
+variable "disk_format" {
+  type          = string
+  default       = "qcow2"
 }
