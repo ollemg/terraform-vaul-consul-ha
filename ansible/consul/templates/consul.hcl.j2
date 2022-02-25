@@ -2,4 +2,10 @@ datacenter = "dc01"
 data_dir = "/opt/consul"
 client_addr = "0.0.0.0"
 advertise_addr = "{{ ansible_default_ipv4.address }}"
-retry_join = ["{{ consul01 }}","{{ consul02 }}","{{ consul03 }}"]
+{% if total_servers == 6 %}
+    retry_join = ["{{ consul01 }}","{{ consul02 }}","{{ consul03 }}"]
+{% elif total_servers == 4 %}
+    retry_join = ["{{ consul01 }}","{{ consul02 }}"]
+{% elif total_servers == 2 %}
+    retry_join = ["{{ consul01 }}"]
+{% endif %}

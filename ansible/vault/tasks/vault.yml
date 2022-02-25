@@ -20,7 +20,6 @@
   loop:
     - vault.hcl
     - vault.env
-    - vault.sh
   loop_control: 
     loop_var: filename
 

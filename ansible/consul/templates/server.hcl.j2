@@ -1,5 +1,11 @@
 server = true
-bootstrap_expect = 3
+{% if total_servers == 6 %}
+    bootstrap_expect = 3
+{% elif total_servers == 4 %}
+    bootstrap_expect = 2
+{% elif total_servers == 2 %}
+    bootstrap_expect = 1
+{% endif %}
 
 ui_config{
     enabled = true

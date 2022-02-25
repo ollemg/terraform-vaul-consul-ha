@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars_files:
-    - hostname.yml
+    - terraform.yml
   pre_tasks:
     - name: Download repo hashcorp
       get_url:
