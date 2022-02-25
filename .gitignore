@@ -143,10 +143,11 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv/
 ansible/.venv
 ansible/vault/files/ssl/*
+ansible/hosts.ini
+ansible/terraform.yml
 env/
 venv/
 ENV/
