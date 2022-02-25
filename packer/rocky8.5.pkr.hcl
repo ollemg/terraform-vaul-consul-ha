@@ -1,64 +1,51 @@
 
 variable "iso_urls" {
   type    = list(string)
-  default = ["https://download.rockylinux.org/pub/rocky/8/isos/x86_64/Rocky-8.5-x86_64-minimal.iso"]
 }
 
 variable "config_file" {
   type    = string
-  default = "kickstart.cfg"
 }
 
 variable "cpu" {
   type    = string
-  default = "6"
 }
 
 variable "disk_size" {
   type    = string
-  default = "16384"
 }
 
 variable "headless" {
   type    = string
-  default = "true"
 }
 
 variable "iso_checksum" {
   type    = string
-  default = "4eb2ae6b06876205f2209e4504110fe4115b37540c21ecfbbc0ebc11084cb779"
 }
 
 variable "name" {
   type    = string
-  default = "rocky"
 }
 
 variable "ram" {
   type    = string
-  default = "4096"
 }
 
 variable "ssh_password" {
   type    = string
-  default = "rockylinux"
 }
 
 variable "ssh_username" {
   type    = string
-  default = "root"
 }
 
 variable "release" {
   type    = string
-  default = "5"
 }
 
 variable "version" {
   type    = string
-  default = "8"
 }
-
 source "qemu" "rocky8_5" {
   accelerator      = "kvm"
   boot_command     = ["<up><wait><tab><wait> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file}<enter><wait>"]
