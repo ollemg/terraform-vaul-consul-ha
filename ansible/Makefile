@@ -1,10 +1,9 @@
 SHELL := /bin/bash
-cnf ?= ansible.env
-VENV := source .venv/bin/activate
-ANSIBLE_CONFIG := $$PWD/ansible.cfg
-PWD := pwd
+cnf ?= ../.env
 include $(cnf)
 export $(shell sed 's/=.*//' $(cnf))
+VENV := source .venv/bin/activate
+
 all: venv install format valid certs ssl playbook
 
 .PHONY: venv
@@ -18,7 +17,6 @@ install:
 
 .PHONY: valid
 valid:
-	@$(VENV); export ANSIBLE_CONFIG=$(ANSIBLE_CONFIG)
 	@$(VENV); ansible all -m ping
 
 .PHONY: format
@@ -27,7 +25,6 @@ format:
 
 .PHONY: playbook
 playbook:
-	@$(VENV); export ANSIBLE_CONFIG=$(ANSIBLE_CONFIG)
 	@$(VENV); ansible --version
 	@$(VENV); ansible-playbook playbook.yml
 
@@ -47,15 +44,17 @@ certs:
 
 .PHONY: clean
 clean:
-	echo $$PATH
 	@rm -rf ./hostname.yml
 	@rm -rf ./hosts.py
 	@rm -rf ./__pycache__
+	@rm -rf ./.venv
+	@rm -rf consul/files/certs/*
+	@rm -rf vault/files/ssl/*
 
 .PHONY: ssl
 ssl:		## Create SSL certificate in vault/files/ssl/
-	@if [ ! -f vault/files/ssl/$(WEB_SSL).crt ]; then \
-		openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout vault/files/ssl/$(WEB_SSL).key -out vault/files/ssl/$(WEB_SSL).crt ;\
+	@if [ ! -f vault/files/ssl/$(PROJECT_DOMAIN).crt ]; then \
+		openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $(PROJECT_DOMAIN).key -out $(PROJECT_DOMAIN).crt -subj "/C=/ST=/L=/O=/OU=/CN=" ;\
 	else \
 		echo "vault certificate exist"; \
 	fi

@@ -1,4 +1,8 @@
 SHELL := /bin/bash
+cnf ?= ../.env
+include $(cnf)
+export $(shell sed 's/=.*//' $(cnf))
+
 all: build
 
 .PHONY: help
@@ -19,3 +23,7 @@ build:		## Cria o disco para o terraform
 	else \
 		echo "Disco já existe!" ;\
 	fi
+
+.PHONY: remove
+remove:		## Apaga o disco template
+	@rm -rf output/

@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-cnf ?= project.env
+cnf ?= .env
 include $(cnf)
 export $(shell sed 's/=.*//' $(cnf))
 
@@ -24,7 +24,6 @@ requirements:	## Valida se os binários necessários estão instalados
 .PHONY: deploy
 deploy:		## Cria o cluster do vault
 	@if [ ! -f packer/output/rocky8_5 ]; then \
-		ls -lah packer/output/rocky8_5 ; \
 		make -C packer ;\
 	else \
 		echo "Disk exist!" ;\
@@ -58,6 +57,10 @@ clean:		## executa limpeza nos arquivos
 .PHONY: build
 build:		## cria a imagem que será utilizada no terraform
 	make -C packer build
+
+.PHONY: remove
+remove:		## delete o disco template
+	make -C packer remove
 
 .PHONY: format
 format:		## Ajusta a identação dos arquivos

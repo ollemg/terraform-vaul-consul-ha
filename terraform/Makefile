@@ -1,4 +1,7 @@
 SHELL := /bin/bash
+cnf ?= ../.env
+include $(cnf)
+export $(shell sed 's/=.*//' $(cnf))
 
 all: deploy output
 
@@ -13,27 +16,28 @@ help:		## Show the help.
 
 .PHONY: deploy
 deploy:		## terraform apply
-	@sudo terraform init
-	@sudo terraform plan -out=tfplan
-	@sudo terraform apply -parallelism=20 -auto-approve
+	@env | grep TF_VAR_
+	@terraform init
+	@terraform plan -out=tfplan
+	@terraform apply -auto-approve
 
 .PHONY: destroy
 destroy:	## terraform destroy
-	@sudo terraform destroy -auto-approve
+	@terraform destroy -auto-approve
 
 .PHONY: console
 console:	## terraform console
-	@sudo terraform console
+	@terraform console
 
 .PHONY: output
 output:		## terraform output
-	@sudo terraform refresh
+	@terraform refresh
 	@terraform output > ../ansible/hosts.py
 
 .PHONY: clean
 clean:		## Limpa os arquivos que o terraform gera
-	@sudo rm -rf ./terraform.tfstate.backup
-	@sudo rm -rf ./terraform.tfstate
-	@sudo rm -rf ./tfplan
-	@sudo rm -rf ./.terraform
-	@sudo rm -rf ./.terraform.lock.hcl
+	@rm -rf ./terraform.tfstate.backup
+	@rm -rf ./terraform.tfstate
+	@rm -rf ./tfplan
+	@rm -rf ./.terraform
+	@rm -rf ./.terraform.lock.hcl
